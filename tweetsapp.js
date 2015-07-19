@@ -1,19 +1,17 @@
 if (Meteor.isClient) {
-Meteor.call('getTweets', function (error, result) {
+Meteor.call('getLaxPowerData', function (error, result) {
   if (error) {
     console.log("error", error);
   };
 
   console.log(result);
 
-  Session.set("tweets", result);
+  Session.set("dataTable", result);
 });
 
-Template.tweets.helpers({
-  rant:function (){
-    return Session.get("tweets");
-  }
-})
+Template.dataTable.helpers({
+
+  })
 
 }
 
@@ -23,12 +21,21 @@ if (Meteor.isServer) {
     var cheerio = Meteor.npmRequire('cheerio');
 
     Meteor.methods({
-      getTweets: function () {
-        result = Meteor.http.get("https://twitter.com/LaxPower ");
+      getLaxPowerData: function () {
+        result = Meteor.http.get("http://www.laxpower.com/update15/binboy/rating07.php");
         $ = cheerio.load(result.content);
-        var resp = $('#stream-items-id').text();
-        return resp;
-      }
+        var teams = $('#content_well > div.cs1 > left > dt > dl > div:nth-child(3) > div.cs1 > pre a')
+          .clone()
+          .children()
+          .remove()
+          .end()
+          .text()
+          .split(' ');
+
+          //Works with split by SPACE
+
+          return teams;
+      },
     })
   });
 };
