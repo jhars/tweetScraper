@@ -22,17 +22,20 @@ if (Meteor.isServer) {
 
     Meteor.methods({
       getLaxPowerData: function () {
-        result = Meteor.http.get("http://www.laxpower.com/update15/binboy/rating07.php");
+        result = Meteor.http.get("http://www.laxpower.com/update15/binboy/rating36.php");
         $ = cheerio.load(result.content);
-        var teams = $('#content_well > div.cs1 > left > dt > dl > div:nth-child(3) > div.cs1 > pre a')
+        var teams = $('#content_well > div.cs1 > left > dt > dl > div:nth-child(3) > div.cs1 > pre')
           .clone()
           .children()
-          .remove()
+
+          //How To Format Data API
+          // grab text directly from "a" tag, not remove
+          // .remove()
           .end()
           .text()
-          .split(' ');
+          // .split(' ');
 
-          //Works with split by SPACE
+          //Works
 
           return teams;
       },
